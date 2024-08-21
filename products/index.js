@@ -21,6 +21,19 @@ app.get("/products/:id", (req, res) => {
   }
 });
 
+app.get("/process-orders", async (req, res) => {
+  const processOrders = async () => {
+    for (let order_no = 1; order_no <= 10; order_no++) {
+      const randomNumber = Math.floor(Math.random() * 100) + 1;
+      console.log(`Processing Order ${randomNumber}`);
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // 2-second delay
+    }
+  };
+
+  await processOrders();
+  res.send("Order processing completed.");
+});
+
 app.listen(port, () => {
   console.log(`Product Service running on http://localhost:${port}`);
 });

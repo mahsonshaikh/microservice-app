@@ -1,6 +1,7 @@
 // user-service/index.js
 const express = require("express");
 const app = express();
+const axios = require("axios");
 const port = 3001;
 
 const users = [
@@ -24,3 +25,13 @@ app.get("/users/:id", (req, res) => {
 app.listen(port, () => {
   console.log(`User Service running on http://localhost:${port}`);
 });
+
+const user_request = async () => {
+  for (let order_no = 1; order_no <= 10; order_no++) {
+    const response = await axios.get("http://localhost:3002/process-orders");
+    console.log(`Processing order batch ${order_no}`);
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+  }
+};
+
+user_request();
