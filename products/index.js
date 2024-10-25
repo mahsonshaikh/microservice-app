@@ -1,7 +1,10 @@
 // product-service/index.js
+const dotenv = require("dotenv");
 const express = require("express");
 const app = express();
 const port = 3002;
+
+dotenv.config();
 
 const products = [
   { id: 1, name: "Product A" },
@@ -34,6 +37,8 @@ app.get("/process-orders", async (req, res) => {
   res.send("Order processing completed.");
 });
 
+const host = process.env.USER_SERVICE_URL;
+
 app.listen(port, () => {
-  console.log(`Product Service running on http://localhost:${port}`);
+  console.log(`Product Service running on http://{host}:${port}`);
 });
