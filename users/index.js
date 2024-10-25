@@ -23,12 +23,12 @@ app.get("/users/:id", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`User Service running on http://localhost:${port}`);
+  console.log(`User Service running on http://gs-users:${port}`);
 });
 
 const user_request = async () => {
   for (let order_no = 1; order_no <= 10; order_no++) {
-    const response = await axios.get("http://localhost:3002/process-orders");
+    const response = await axios.get("http://gs-products:3002/process-orders");
     console.log(`Processing order batch ${order_no}`);
     await new Promise((resolve) => setTimeout(resolve, 2000));
   }

@@ -40,5 +40,5 @@ app.get("/process-orders", async (req, res) => {
 const host = process.env.USER_SERVICE_URL;
 
 app.listen(port, () => {
-  console.log(`Product Service running on http://{host}:${port}`);
+  console.log(`Product Service running on http://gs-products:${port}`);
 });
