@@ -1,37 +1,49 @@
-// user-service/index.js
 const express = require("express");
+
+// Initialize Express app
 const app = express();
-const axios = require("axios");
-const port = 3001;
+const PORT = 3000;
 
-const users = [
-  { id: 1, name: "John Doe" },
-  { id: 2, name: "Jane Doe" },
-];
+// Helper function to generate random order IDs
+function getRandomOrderId() {
+  return Math.floor(Math.random() * 100000);
+}
 
-app.get("/users", (req, res) => {
-  res.json(users);
-});
+// Helper function to generate random delay (1-5 seconds)
+function getRandomDelay() {
+  return Math.floor(Math.random() * 5000) + 1000;
+}
 
-app.get("/users/:id", (req, res) => {
-  const user = users.find((u) => u.id === parseInt(req.params.id));
-  if (user) {
-    res.json(user);
+// Function to simulate a random GET or POST request
+function simulateRequest() {
+  const isGetRequest = Math.random() < 0.5; // 50% chance for GET or POST
+  const orderId = getRandomOrderId();
+
+  if (isGetRequest) {
+    console.log(`GET Request: Retrieving Order ID ${orderId}`);
   } else {
-    res.status(404).json({ message: "User not found" });
+    console.log(`POST Request: Processing Order ID ${orderId}`);
   }
+
+  // Schedule the next simulated request randomly between 1-5 seconds
+  setTimeout(simulateRequest, getRandomDelay());
+}
+
+// Define routes for the Express server
+app.get("/order", (req, res) => {
+  const randomOrderId = getRandomOrderId();
+  console.log(`GET Request Received: Order ID ${randomOrderId}`);
+  res.json({ message: `Order ID ${randomOrderId} retrieved successfully.` });
 });
 
-app.listen(port, () => {
-  console.log(`User Service running on http://gs-users:${port}`);
+app.post("/order", (req, res) => {
+  const randomOrderId = getRandomOrderId();
+  console.log(`POST Request Received: Order ID ${randomOrderId}`);
+  res.json({ message: `Order ID ${randomOrderId} processed successfully.` });
 });
 
-const user_request = async () => {
-  for (let order_no = 1; order_no <= 10; order_no++) {
-    const response = await axios.get("http://gs-products:3002/process-orders");
-    console.log(`Processing order batch ${order_no}`);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-  }
-};
-
-user_request();
+// Start the Express server and the simulated requests
+app.listen(PORT, () => {
+  console.log(`Server is running at http://localhost:${PORT}`);
+  simulateRequest(); // Start simulating requests once the server is up
+});

@@ -1,44 +1,36 @@
-// product-service/index.js
-const dotenv = require("dotenv");
 const express = require("express");
+
+// Initialize Express app
 const app = express();
-const port = 3002;
+const PORT = 3000;
 
-dotenv.config();
+function getRandomOrderId() {
+  return Math.floor(Math.random() * 100000); // Generate a random number between 0 and 99999
+}
 
-const products = [
-  { id: 1, name: "Product A" },
-  { id: 2, name: "Product B" },
-];
+function getRandomDelay() {
+  return Math.floor(Math.random() * 5000) + 1000; // Random delay between 1000ms and 5000ms
+}
 
-app.get("/products", (req, res) => {
-  res.json(products);
+function processOrder() {
+  const orderId = getRandomOrderId();
+  console.log(`Processing Order ID: ${orderId}`);
+
+  const nextDelay = getRandomDelay();
+  setTimeout(processOrder, nextDelay); // Schedule the next order processing
+}
+
+// Start processing orders
+processOrder();
+
+// Define a simple route to test the server
+app.get("/", (req, res) => {
+  res.send(
+    "Express server is running! Random orders are being processed in the background."
+  );
 });
 
-app.get("/products/:id", (req, res) => {
-  const product = products.find((p) => p.id === parseInt(req.params.id));
-  if (product) {
-    res.json(product);
-  } else {
-    res.status(404).json({ message: "Product not found" });
-  }
-});
-
-app.get("/process-orders", async (req, res) => {
-  const processOrders = async () => {
-    for (let order_no = 1; order_no <= 10; order_no++) {
-      const randomNumber = Math.floor(Math.random() * 100) + 1;
-      console.log(`Processing Order ${randomNumber}`);
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // 2-second delay
-    }
-  };
-
-  await processOrders();
-  res.send("Order processing completed.");
-});
-
-const host = process.env.USER_SERVICE_URL;
-
-app.listen(port, () => {
-  console.log(`Product Service running on http://gs-products:${port}`);
+// Start the Express server
+app.listen(PORT, () => {
+  console.log(`Server is running at http://localhost:${PORT}`);
 });
